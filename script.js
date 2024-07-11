@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const quizContainer = document.getElementById('quiz');
     const resultsContainer = document.getElementById('results');
     const submitButton = document.getElementById('submit');
-
+ 
     const questions = [
         {
             question: "Quelle est ta couleur préférée ?",

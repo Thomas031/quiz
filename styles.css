@@ -1,7 +1,7 @@
 body {
     font-family: 'Courier New', Courier, monospace;
     background-color: #f4f4f4;
-    color: #333;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,16 +12,29 @@ body {
 }
 
 .container {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     width: 80%;
     max-width: 600px;
+    text-align: center;
+}
+
+.message-box {
+    font-size: 24px;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
 }
 
 #conversation {
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
     margin-bottom: 10px;
 }
@@ -35,6 +48,7 @@ body {
 .user {
     background-color: #e0e0e0;
     text-align: right;
+    color: #000;
 }
 
 .bot {
@@ -44,6 +58,7 @@ body {
 #inputContainer {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
 #userInput {

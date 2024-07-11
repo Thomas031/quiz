@@ -5,15 +5,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const questions = [
         {
+            question: "Quelle est ta couleur préférée ?",
+            answers: {
+                a: "Rouge",
+                b: "Bleu",
+                c: "Vert",
+                d: "Jaune"
+            },
+            correctAnswer: "a",
+            level: "banal"
+        },
+        {
+            question: "Quel est ton animal préféré ?",
+            answers: {
+                a: "Chat",
+                b: "Chien",
+                c: "Oiseau",
+                d: "Poisson"
+            },
+            correctAnswer: "b",
+            level: "banal"
+        },
+        {
             question: "Es-tu seul chez toi ?",
             answers: {
                 a: "Oui",
                 b: "Non"
             },
+            correctAnswer: "a",
             followUp: {
                 a: "Es-tu sûr d'être seul ? Veux-tu vérifier encore une fois ?",
                 b: null
-            }
+            },
+            level: "effrayant"
         },
         {
             question: "As-tu éteint les lumières ?",
@@ -21,21 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 a: "Oui",
                 b: "Non"
             },
+            correctAnswer: "b",
             followUp: {
                 a: null,
-                b: null
-            }
-        },
-        {
-            question: "As-tu fermé la porte à clé ?",
-            answers: {
-                a: "Oui",
-                b: "Non"
+                b: "Peux-tu vérifier les lumières ?"
             },
-            followUp: {
-                a: null,
-                b: null
-            }
+            level: "effrayant"
         },
         {
             question: "Entends-tu des bruits étranges ?",
@@ -43,16 +58,53 @@ document.addEventListener("DOMContentLoaded", function() {
                 a: "Oui",
                 b: "Non"
             },
-            followUp: {
-                a: null,
-                b: null
-            }
-        }
+            correctAnswer: "a",
+            level: "effrayant"
+        },
+        // Ajout de questions supplémentaires
+        {
+            question: "Aimes-tu les films d'horreur ?",
+            answers: {
+                a: "Oui",
+                b: "Non"
+            },
+            correctAnswer: "a",
+            level: "banal"
+        },
+        {
+            question: "Quelle heure est-il ?",
+            answers: {
+                a: "Matin",
+                b: "Après-midi",
+                c: "Soir",
+                d: "Nuit"
+            },
+            correctAnswer: "d",
+            level: "effrayant"
+        },
+        {
+            question: "Sais-tu où sont tes clés ?",
+            answers: {
+                a: "Oui",
+                b: "Non"
+            },
+            correctAnswer: "a",
+            level: "effrayant"
+        },
+        {
+            question: "As-tu entendu cela ?",
+            answers: {
+                a: "Oui",
+                b: "Non"
+            },
+            correctAnswer: "a",
+            level: "effrayant"
+        },
     ];
 
-    let userAnswers = {};
+    let currentQuestionIndex = 0;
 
-    function buildQuiz(currentQuestionIndex = 0) {
+    function buildQuiz() {
         if (currentQuestionIndex < questions.length) {
             const currentQuestion = questions[currentQuestionIndex];
             const answers = [];
@@ -68,21 +120,29 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="question"> ${currentQuestion.question} </div>
                 <div class="answers"> ${answers.join('')} </div>
             `;
-            submitButton.onclick = () => saveAnswerAndProceed(currentQuestionIndex);
+            submitButton.onclick = () => saveAnswerAndProceed();
         } else {
             showResults();
         }
     }
 
-    function saveAnswerAndProceed(currentQuestionIndex) {
+    function saveAnswerAndProceed() {
         const answerContainers = quizContainer.querySelectorAll('.answers');
         const answerContainer = answerContainers[0];
         const selector = `input[name=question${currentQuestionIndex}]:checked`;
         const userAnswer = (answerContainer.querySelector(selector) || {}).value;
 
         if (userAnswer) {
-            userAnswers[currentQuestionIndex] = userAnswer;
-            const followUpQuestion = questions[currentQuestionIndex].followUp[userAnswer];
+            const currentQuestion = questions[currentQuestionIndex];
+            const followUpQuestion = currentQuestion.followUp ? currentQuestion.followUp[userAnswer] : null;
+
+            if (currentQuestion.level === "effrayant" && userAnswer === currentQuestion.correctAnswer) {
+                // Afficher un screamer
+                setTimeout(() => {
+                    alert("BOO!");
+                }, 500);
+            }
+
             if (followUpQuestion) {
                 quizContainer.innerHTML = `
                     <div class="question"> ${followUpQuestion} </div>
@@ -97,17 +157,19 @@ document.addEventListener("DOMContentLoaded", function() {
                         </label>
                     </div>
                 `;
-                submitButton.onclick = () => saveFollowUpAndProceed(currentQuestionIndex);
+                submitButton.onclick = () => saveFollowUpAndProceed();
             } else {
-                buildQuiz(currentQuestionIndex + 1);
+                currentQuestionIndex++;
+                buildQuiz();
             }
         } else {
             alert("Veuillez sélectionner une réponse.");
         }
     }
 
-    function saveFollowUpAndProceed(currentQuestionIndex) {
-        buildQuiz(currentQuestionIndex + 1);
+    function saveFollowUpAndProceed() {
+        currentQuestionIndex++;
+        buildQuiz();
     }
 
     function showResults() {
